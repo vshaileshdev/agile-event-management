@@ -13,7 +13,7 @@ bp = Blueprint('faculty', __name__, url_prefix='/faculty')
 def dashboard():
     db = get_db()
     events = db.execute(
-        'SELECT * FROM event_tickets WHERE faculty_id = ? ORDER BY created_at DESC',
+        'SELECT * FROM event_tickets WHERE faculty_id = %s ORDER BY created_at DESC',
         (g.faculty['faculty_id'],)
     ).fetchall()
     return render_template('faculty/dashboard.html', events=events)
@@ -50,7 +50,7 @@ def raise_event():
             cursor.execute(
                 '''INSERT INTO event_tickets 
                 (faculty_id, event_name, venue_status, venue, participants, event_date, event_time, poster)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?)''',
+                VALUES (%s, %s, %s, %s, %s, %s, %s, %s)''',
                 (g.faculty['faculty_id'], event_name, venue_status, venue, participants, event_date, event_time, poster_filename)
             )
             event_id = cursor.lastrowid
@@ -89,7 +89,7 @@ def raise_event():
                     cursor.execute(
                         '''INSERT INTO event_guests 
                         (event_id, guest_type, guest_name, designation, guest_phone, guest_house, guest_photo, guest_resume)
-                        VALUES (?, ?, ?, ?, ?, ?, ?, ?)''',
+                        VALUES (%s, %s, %s, %s, %s, %s, %s, %s)''',
                         (event_id, g_type, g_name, g_designation, g_phone, g_house, photo_filename, resume_filename)
                     )
             
@@ -109,7 +109,7 @@ def raise_event():
 def view_event(id):
     db = get_db()
     event = db.execute(
-        'SELECT * FROM event_tickets WHERE event_id = ? AND faculty_id = ?',
+        'SELECT * FROM event_tickets WHERE event_id = %s AND faculty_id = %s',
         (id, g.faculty['faculty_id'])
     ).fetchone()
     
@@ -118,11 +118,11 @@ def view_event(id):
         return redirect(url_for('faculty.dashboard'))
         
     guests = db.execute(
-        'SELECT * FROM event_guests WHERE event_id = ? ORDER BY guest_id ASC', (id,)
+        'SELECT * FROM event_guests WHERE event_id = %s ORDER BY guest_id ASC', (id,)
     ).fetchall()
     
     reply = db.execute(
-        'SELECT * FROM event_replies WHERE event_id = ?', (id,)
+        'SELECT * FROM event_replies WHERE event_id = %s', (id,)
     ).fetchone()
     
     return render_template('faculty/view_event.html', event=event, guests=guests, reply=reply)

@@ -14,7 +14,7 @@ def login_faculty():
         error = None
 
         faculty = db.execute(
-            'SELECT * FROM faculty_users WHERE employee_id = ? AND email = ?', (employee_id, email)
+            'SELECT * FROM faculty_users WHERE employee_id = %s AND email = %s', (employee_id, email)
         ).fetchone()
 
         if faculty is None:
@@ -39,7 +39,7 @@ def login_admin():
         error = None
 
         admin = db.execute(
-            "SELECT * FROM users WHERE email = ? AND role = 'admin'",
+            "SELECT * FROM users WHERE email = %s AND role = 'admin'",
             (email,)
         ).fetchone()
 
@@ -86,13 +86,13 @@ def load_logged_in_user():
     if role == 'faculty':
         faculty_id = session.get('faculty_id')
         g.faculty = get_db().execute(
-            'SELECT * FROM faculty_users WHERE faculty_id = ?', (faculty_id,)
+            'SELECT * FROM faculty_users WHERE faculty_id = %s', (faculty_id,)
         ).fetchone()
         g.admin = None
     elif role == 'admin':
         user_id = session.get('user_id')
         g.admin = get_db().execute(
-            'SELECT * FROM users WHERE user_id = ?', (user_id,)
+            'SELECT * FROM users WHERE user_id = %s', (user_id,)
         ).fetchone()
         g.faculty = None
     else:

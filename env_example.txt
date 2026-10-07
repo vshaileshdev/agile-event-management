@@ -1,0 +1,5 @@
+DB_HOST=event-management-db.cgvcuoacqti3.us-east-1.rds.amazonaws.com
+DB_PORT=3306
+DB_NAME=event_management
+DB_USER=admin
+DB_PASSWORD=YOUR_PLACEHOLDER_PASSWORD

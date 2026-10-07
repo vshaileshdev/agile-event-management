@@ -24,7 +24,7 @@ def view_event(id):
         '''SELECT e.*, f.employee_id 
            FROM event_tickets e 
            JOIN faculty_users f ON e.faculty_id = f.faculty_id
-           WHERE e.event_id = ?''', (id,)
+           WHERE e.event_id = %s''', (id,)
     ).fetchone()
     
     if not event:
@@ -32,11 +32,11 @@ def view_event(id):
         return redirect(url_for('admin.dashboard'))
         
     guests = db.execute(
-        'SELECT * FROM event_guests WHERE event_id = ? ORDER BY guest_id ASC', (id,)
+        'SELECT * FROM event_guests WHERE event_id = %s ORDER BY guest_id ASC', (id,)
     ).fetchall()
     
     reply = db.execute(
-        'SELECT * FROM event_replies WHERE event_id = ?', (id,)
+        'SELECT * FROM event_replies WHERE event_id = %s', (id,)
     ).fetchone()
     
     return render_template('admin/view_event.html', event=event, guests=guests, reply=reply)
@@ -46,7 +46,7 @@ def view_event(id):
 def reply_event(id):
     db = get_db()
     event = db.execute(
-        'SELECT * FROM event_tickets WHERE event_id = ?', (id,)
+        'SELECT * FROM event_tickets WHERE event_id = %s', (id,)
     ).fetchone()
     
     if not event:
@@ -54,11 +54,11 @@ def reply_event(id):
         return redirect(url_for('admin.dashboard'))
         
     guests = db.execute(
-        'SELECT * FROM event_guests WHERE event_id = ? ORDER BY guest_id ASC', (id,)
+        'SELECT * FROM event_guests WHERE event_id = %s ORDER BY guest_id ASC', (id,)
     ).fetchall()
     
     reply = db.execute(
-        'SELECT * FROM event_replies WHERE event_id = ?', (id,)
+        'SELECT * FROM event_replies WHERE event_id = %s', (id,)
     ).fetchone()
     
     if request.method == 'POST':
@@ -71,20 +71,20 @@ def reply_event(id):
         if reply:
             cursor.execute(
                 '''UPDATE event_replies 
-                   SET reply_text = ?, assigned_venue = ?, status = ?
-                   WHERE event_id = ?''',
+                   SET reply_text = %s, assigned_venue = %s, status = %s
+                   WHERE event_id = %s''',
                 (reply_text, assigned_venue, status, id)
             )
         else:
             cursor.execute(
                 '''INSERT INTO event_replies 
                    (event_id, admin_id, reply_text, assigned_venue, status)
-                   VALUES (?, ?, ?, ?, ?)''',
+                   VALUES (%s, %s, %s, %s, %s)''',
                 (id, g.admin['user_id'], reply_text, assigned_venue, status)
             )
             
         cursor.execute(
-            'UPDATE event_tickets SET status = ? WHERE event_id = ?',
+            'UPDATE event_tickets SET status = %s WHERE event_id = %s',
             (status, id)
         )
         
