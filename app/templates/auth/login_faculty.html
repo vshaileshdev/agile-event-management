@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block title %}Faculty Login - Event Management System{% endblock %}
+
+{% block content %}
+<div class="auth-box">
+    <div class="card">
+        <h2 style="text-align: center; border-bottom: none;">Faculty Login</h2>
+        <p style="text-align: center; color: var(--text-muted); margin-top: -10px; margin-bottom: 20px;">Access the event management portal</p>
+        
+        <form method="POST">
+            <div class="form-group">
+                <label for="employee_id">Employee ID</label>
+                <input type="text" name="employee_id" id="employee_id" placeholder="e.g. emp123" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="email">Institutional Email</label>
+                <input type="email" name="email" id="email" placeholder="faculty@institute.edu" required>
+            </div>
+            
+            <button type="submit" id="login_btn" style="width: 100%;" class="mt-2">Sign In as Faculty</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

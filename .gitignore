@@ -1,0 +1,49 @@
+# Python
+venv/
+.venv/
+env/
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+
+# Flask/runtime
+instance/*.db
+*.db
+*.sqlite
+*.sqlite3
+
+# Environment/secrets
+.env
+.env.*
+*.pem
+*.key
+credentials
+credentials.json
+aws_credentials
+.aws/
+
+# IDE/editor
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Logs/runtime artifacts
+*.log
+logs/
+
+# Testing/cache
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+.mypy_cache/
+
+# Build/package/cache
+*.egg-info/
+dist/
+build/

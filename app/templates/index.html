@@ -1,0 +1,69 @@
+{% extends 'base.html' %}
+
+{% block title %}Event Management System - Plan & Manage{% endblock %}
+
+{% block content %}
+<div style="text-align: center; padding: 40px 20px;">
+    <h1 style="font-size: 36px; color: var(--header-bg); margin-bottom: 10px;">Streamline Your Event Workflow</h1>
+    <p style="font-size: 18px; color: var(--text-muted); max-width: 600px; margin: 0 auto 40px auto;">
+        A comprehensive solution for academic and corporate event planning. Submit proposals, manage logistics, and track approvals all in one centralized platform.
+    </p>
+
+    <div class="flex-row" style="justify-content: center; gap: 30px; margin-bottom: 60px; flex-wrap: wrap;">
+        <!-- Faculty Portal Card -->
+        <div class="card" style="flex: 1; min-width: 280px; max-width: 350px; text-align: left; transition: transform 0.2s; box-shadow: var(--shadow-md);">
+            <div style="background-color: #e0f2fe; color: var(--primary-color); width: 48px; height: 48px; border-radius: 8px; display: flex; align-items: center; justify-content: center; margin-bottom: 20px; font-size: 24px;">
+                📅
+            </div>
+            <h3 style="border: none; padding: 0; margin-bottom: 10px; font-size: 20px;">Faculty Portal</h3>
+            <p style="color: var(--text-muted); margin-bottom: 25px; min-height: 50px;">
+                Submit new event proposals, request venues, and track the status of your applications.
+            </p>
+            <a href="{{ url_for('auth.login_faculty') }}" class="btn" style="width: 100%; text-align: center;">Faculty Login</a>
+        </div>
+
+        <!-- Admin Portal Card -->
+        <div class="card" style="flex: 1; min-width: 280px; max-width: 350px; text-align: left; transition: transform 0.2s; box-shadow: var(--shadow-md);">
+            <div style="background-color: #f3e8ff; color: #9333ea; width: 48px; height: 48px; border-radius: 8px; display: flex; align-items: center; justify-content: center; margin-bottom: 20px; font-size: 24px;">
+                ⚙️
+            </div>
+            <h3 style="border: none; padding: 0; margin-bottom: 10px; font-size: 20px; color: #9333ea;">Admin Portal</h3>
+            <p style="color: var(--text-muted); margin-bottom: 25px; min-height: 50px;">
+                Review submissions, assign physical venues, and manage overall event approval workflows.
+            </p>
+            <a href="{{ url_for('auth.login_admin') }}" class="btn" style="width: 100%; text-align: center; background-color: #9333ea;">Admin Login</a>
+        </div>
+    </div>
+
+    <div style="text-align: left; max-width: 800px; margin: 0 auto; padding-top: 20px;">
+        <h2 style="text-align: center; margin-bottom: 40px; color: var(--header-bg);">How It Works</h2>
+        <div class="flex-row" style="gap: 20px; flex-wrap: wrap;">
+            
+            <div style="flex: 1; min-width: 150px; background: #fff; padding: 20px; border-radius: var(--border-radius); box-shadow: var(--shadow-sm); border-top: 4px solid var(--primary-color);">
+                <div style="font-size: 24px; font-weight: 800; color: #e2e8f0; margin-bottom: 10px;">01</div>
+                <h4 style="margin: 0 0 10px 0; color: var(--text-main);">Submit</h4>
+                <p style="font-size: 14px; color: var(--text-muted); margin: 0;">Faculty members fill out event details, guest info, and venue requirements.</p>
+            </div>
+
+            <div style="flex: 1; min-width: 150px; background: #fff; padding: 20px; border-radius: var(--border-radius); box-shadow: var(--shadow-sm); border-top: 4px solid var(--secondary-color);">
+                <div style="font-size: 24px; font-weight: 800; color: #e2e8f0; margin-bottom: 10px;">02</div>
+                <h4 style="margin: 0 0 10px 0; color: var(--text-main);">Review</h4>
+                <p style="font-size: 14px; color: var(--text-muted); margin: 0;">Administrators examine the proposal, checking feasibility and constraints.</p>
+            </div>
+
+            <div style="flex: 1; min-width: 150px; background: #fff; padding: 20px; border-radius: var(--border-radius); box-shadow: var(--shadow-sm); border-top: 4px solid var(--success);">
+                <div style="font-size: 24px; font-weight: 800; color: #e2e8f0; margin-bottom: 10px;">03</div>
+                <h4 style="margin: 0 0 10px 0; color: var(--text-main);">Approve</h4>
+                <p style="font-size: 14px; color: var(--text-muted); margin: 0;">Once validated, admins allocate resources and officially approve the event.</p>
+            </div>
+
+            <div style="flex: 1; min-width: 150px; background: #fff; padding: 20px; border-radius: var(--border-radius); box-shadow: var(--shadow-sm); border-top: 4px solid var(--text-muted);">
+                <div style="font-size: 24px; font-weight: 800; color: #e2e8f0; margin-bottom: 10px;">04</div>
+                <h4 style="margin: 0 0 10px 0; color: var(--text-main);">Track</h4>
+                <p style="font-size: 14px; color: var(--text-muted); margin: 0;">Staff can monitor event statuses and view assigned venues directly via their dashboard.</p>
+            </div>
+            
+        </div>
+    </div>
+</div>
+{% endblock %}

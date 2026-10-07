@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+
+{% block title %}Faculty Dashboard - Event Management System{% endblock %}
+
+{% block content %}
+<div class="flex-row" style="justify-content: space-between; margin-bottom: 25px;">
+    <h2 style="margin: 0; color: var(--primary-color);">Faculty Dashboard</h2>
+    <a href="{{ url_for('faculty.raise_event') }}" class="btn">+ Raise Event</a>
+</div>
+
+<div class="stats-container">
+    <div class="stat-card" style="border-top: 4px solid var(--primary-color);">
+        <h3 style="font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px;"><span style="margin-right: 5px;">📊</span> Total Events</h3>
+        <p style="color: var(--text-main);">{{ events|length }}</p>
+    </div>
+    <div class="stat-card" style="border-top: 4px solid var(--warning);">
+        <h3 style="font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px;"><span style="margin-right: 5px;">⏳</span> Pending</h3>
+        <p style="color: var(--warning);">{{ events|selectattr('status', 'equalto', 'Pending')|list|length }}</p>
+    </div>
+    <div class="stat-card" style="border-top: 4px solid var(--success);">
+        <h3 style="font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px;"><span style="margin-right: 5px;">✅</span> Approved</h3>
+        <p style="color: var(--success);">{{ events|selectattr('status', 'equalto', 'Approved')|list|length }}</p>
+    </div>
+    <div class="stat-card" style="border-top: 4px solid var(--danger);">
+        <h3 style="font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px;"><span style="margin-right: 5px;">❌</span> Rejected</h3>
+        <p style="color: var(--danger);">{{ events|selectattr('status', 'equalto', 'Rejected')|list|length }}</p>
+    </div>
+</div>
+
+<div class="card">
+    <h3>Your Recent Events</h3>
+    
+    {% if events %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Event ID</th>
+                    <th>Event Name</th>
+                    <th>Date</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for event in events %}
+                <tr>
+                    <td>#{{ event.event_id }}</td>
+                    <td style="font-weight: 500;">
+                        <a href="{{ url_for('faculty.view_event', id=event.event_id) }}" style="color: var(--primary-color); text-decoration: none;">{{ event.event_name }}</a>
+                    </td>
+                    <td>{{ event.event_date }}</td>
+                    <td>
+                        {% if event.status == 'Approved' %}
+                            <span class="badge badge-approved">Approved</span>
+                        {% elif event.status == 'Rejected' %}
+                            <span class="badge badge-rejected">Rejected</span>
+                        {% else %}
+                            <span class="badge badge-pending">Pending</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <a href="{{ url_for('faculty.view_event', id=event.event_id) }}" class="btn btn-secondary" style="padding: 6px 12px; font-size: 12px;">View Details</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <div style="text-align: center; padding: 40px 20px;">
+            <p style="color: var(--text-muted); font-size: 16px;">No events raised yet. Click '+ Raise Event' to get started.</p>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

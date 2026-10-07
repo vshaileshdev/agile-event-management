@@ -1,0 +1,84 @@
+{% extends 'base.html' %}
+
+{% block title %}View Event (Admin) - {{ event.event_name }}{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="flex-row" style="justify-content: space-between; margin-bottom: 20px;">
+        <h2 style="margin: 0; border: none; font-size: 24px; color: var(--primary-color);">{{ event.event_name }}</h2>
+        <div>
+            <a href="{{ url_for('admin.reply_event', id=event.event_id) }}" class="btn">Reply / Update</a>
+            <a href="{{ url_for('admin.dashboard') }}" class="btn btn-secondary">Back to Dashboard</a>
+        </div>
+    </div>
+
+    <div class="event-section flex-row" style="gap: 40px; align-items: flex-start; background: var(--bg-color);">
+        <div>
+            <p style="margin: 5px 0;"><b>Faculty Employee ID:</b> {{ event.employee_id }}</p>
+            <p style="margin: 5px 0;"><b>Date:</b> {{ event.event_date }}</p>
+            <p style="margin: 5px 0;"><b>Time:</b> {{ event.event_time }}</p>
+        </div>
+        <div>
+            {% if event.venue_status == 'yes' and event.venue %}
+                <p style="margin: 5px 0;"><b>Venue:</b> {{ event.venue }}</p>
+            {% else %}
+                <p style="margin: 5px 0;"><b>Expected Participants:</b> {{ event.participants or 'Not specified' }}</p>
+            {% endif %}
+        </div>
+    </div>
+    
+    {% if event.poster %}
+        <div style="margin: 20px 0;">
+            <p><b>Poster:</b></p>
+            <img src="{{ url_for('static', filename='uploads/' ~ event.poster) }}" width="200" alt="Event Poster" style="border-radius: 4px; box-shadow: var(--shadow-sm);">
+        </div>
+    {% endif %}
+    
+    <hr style="margin: 30px 0;">
+    
+    <h3 style="border-bottom: none; color: var(--text-main);">Guests & Speakers</h3>
+    {% if guests %}
+        <div class="flex-row" style="flex-wrap: wrap; gap: 20px;">
+        {% for g in guests %}
+            <div class="card" style="margin-bottom:0; flex: 1; min-width: 300px; padding: 20px; box-shadow: none; border: 1px solid var(--border-color);">
+                <h4 style="margin-top:0; border-bottom: 1px solid #eee; padding-bottom: 8px;">Guest {{ loop.index }}</h4>
+                <p style="margin: 5px 0;"><b>Guest Type:</b> {{ g.guest_type | capitalize }}</p>
+                <p style="margin: 5px 0;"><b>Name:</b> {{ g.guest_name }}</p>
+                <p style="margin: 5px 0;"><b>Designation:</b> {{ g.designation if g.designation else 'Not Provided' }}</p>
+                <p style="margin: 5px 0;"><b>Phone:</b> {{ g.guest_phone }}</p>
+                
+                {% if g.guest_type == 'external' %}
+                    <p style="margin: 5px 0;"><b>Guest House Required:</b> {{ g.guest_house or 'Not specified' }}</p>
+                {% endif %}
+                
+                {% if g.guest_photo %}
+                    <div style="margin-top: 10px;">
+                        <p style="margin: 0 0 5px 0;"><b>Photo:</b></p>
+                        <img src="{{ url_for('static', filename='uploads/' ~ g.guest_photo) }}" width="100" alt="Guest Photo" style="border-radius: 4px;">
+                    </div>
+                {% endif %}
+                
+                {% if g.guest_resume %}
+                    <p style="margin-top: 10px;"><b>Resume:</b> <a href="{{ url_for('static', filename='uploads/' ~ g.guest_resume) }}" target="_blank" style="color: var(--primary-color);">View Resume</a></p>
+                {% endif %}
+            </div>
+        {% endfor %}
+        </div>
+    {% else %}
+        <p style="color: var(--text-muted);">No guests added.</p>
+    {% endif %}
+    
+    <hr style="margin: 30px 0;">
+    
+    <h3 style="border-bottom: none; color: var(--text-main);">Admin Reply</h3>
+    <div class="event-section" style="background: {% if reply and reply.status == 'Approved' %}#e8f8f5{% elif reply and reply.status == 'Rejected' %}#fdedec{% else %}var(--bg-color){% endif %};">
+        {% if reply %}
+            <p><b>Status:</b> {% if reply.status == 'Approved' %}<span class="badge badge-approved">Approved</span>{% else %}<span class="badge badge-rejected">Rejected</span>{% endif %}</p>
+            <p><b>Assigned Venue:</b> {{ reply.assigned_venue or 'N/A' }}</p>
+            <p><b>Message:</b> {{ reply.reply_text }}</p>
+        {% else %}
+            <p>No admin reply yet.</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

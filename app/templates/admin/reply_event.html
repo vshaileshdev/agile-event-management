@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+
+{% block title %}Reply to Event - Event Management System{% endblock %}
+
+{% block content %}
+<div class="card">
+    <h2 style="color: var(--primary-color);">Reply to: {{ event.event_name }}</h2>
+    <p style="color: var(--text-muted); margin-top: -15px; margin-bottom: 25px;">Provide an official response, assign venues if requested, and update the event status.</p>
+    
+    <form method="POST">
+        <div class="form-group">
+            <label for="status">Decision Status</label>
+            <select name="status" id="status" required>
+                <option value="">Select decision</option>
+                <option value="Approved" {% if reply and reply.status == 'Approved' %}selected{% endif %}>Approved</option>
+                <option value="Rejected" {% if reply and reply.status == 'Rejected' %}selected{% endif %}>Rejected</option>
+            </select>
+        </div>
+        
+        <div class="form-group">
+            <label for="assigned_venue">Assigned Venue (Optional)</label>
+            <input type="text" name="assigned_venue" id="assigned_venue" value="{{ reply.assigned_venue if reply and reply.assigned_venue else '' }}" placeholder="Enter assigned venue if applicable">
+        </div>
+        
+        <div class="form-group">
+            <label for="reply_text">Official Reply Message</label>
+            <textarea name="reply_text" id="reply_text" rows="5" placeholder="Enter reasons for approval/rejection or any instructions..." required>{{ reply.reply_text if reply else '' }}</textarea>
+        </div>
+        
+        <div class="flex-row" style="margin-top: 25px;">
+            <button type="submit" id="submit_reply" class="btn" style="min-width: 150px;">{{ 'Update Reply' if reply else 'Submit Reply' }}</button>
+            <a href="{{ url_for('admin.view_event', id=event.event_id) }}" class="btn btn-secondary">Cancel</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block title %}Admin Login - Event Management System{% endblock %}
+
+{% block content %}
+<div class="auth-box">
+    <div class="card">
+        <h2 style="text-align: center; border-bottom: none;">Admin Login</h2>
+        <p style="text-align: center; color: var(--text-muted); margin-top: -10px; margin-bottom: 20px;">System Administrator Access</p>
+        
+        <form method="POST">
+            <div class="form-group">
+                <label for="email">Admin Email</label>
+                <input type="email" name="email" id="email" placeholder="admin@institute.edu" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" name="password" id="password" required>
+            </div>
+            
+            <button type="submit" id="login_btn" style="width: 100%;" class="mt-2">Sign In as Admin</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

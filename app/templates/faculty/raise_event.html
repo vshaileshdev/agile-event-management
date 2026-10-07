@@ -1,0 +1,193 @@
+{% extends 'base.html' %}
+
+{% block title %}Raise Event - Event Management System{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="flex-row" style="justify-content: space-between; margin-bottom: 20px;">
+        <h2 style="margin: 0; border: none;">Raise New Event</h2>
+        <a href="{{ url_for('faculty.dashboard') }}" style="color: var(--text-muted); text-decoration: none; font-size: 14px;">&larr; Back to Dashboard</a>
+    </div>
+    
+    <p style="color: var(--text-muted); margin-top: -15px; margin-bottom: 30px;">Fill out the details below to submit a new event request.</p>
+    
+    <form method="POST" enctype="multipart/form-data">
+        
+        <!-- SECTION 1: Event Information -->
+        <div class="event-section">
+            <h4>1. Event Information</h4>
+            <div class="form-group">
+                <label for="event_name">Event Name</label>
+                <input type="text" name="event_name" id="event_name" placeholder="e.g. Annual Tech Symposium" required>
+            </div>
+            
+            <div class="flex-row" style="gap: 20px;">
+                <div class="form-group" style="flex: 1;">
+                    <label for="event_date">Event Date</label>
+                    <input type="date" name="event_date" id="event_date" required>
+                </div>
+                <div class="form-group" style="flex: 1;">
+                    <label for="event_time">Event Time</label>
+                    <input type="time" name="event_time" id="event_time" required>
+                </div>
+            </div>
+        </div>
+        
+        <!-- SECTION 2: Venue & Schedule -->
+        <div class="event-section">
+            <h4>2. Venue & Participants</h4>
+            <div class="form-group">
+                <label for="venue_status">Venue Preference</label>
+                <select name="venue_status" id="venue_status" onchange="toggleVenue(this.value)" required>
+                    <option value="">Select an option</option>
+                    <option value="yes">I have already booked a venue</option>
+                    <option value="no">I need the admin to assign a venue</option>
+                </select>
+            </div>
+            
+            <div id="venueBox" class="form-group" style="display:none; background: #fff; padding: 15px; border-left: 3px solid var(--primary-color);">
+                <label for="venue">Confirmed Venue Name</label>
+                <input type="text" name="venue" id="venue" placeholder="e.g. Main Auditorium">
+            </div>
+            
+            <div id="participantsBox" class="form-group" style="display:none; background: #fff; padding: 15px; border-left: 3px solid var(--secondary-color);">
+                <label for="participants">Expected Number of Participants</label>
+                <input type="number" name="participants" id="participants" placeholder="e.g. 150">
+            </div>
+        </div>
+        
+        <!-- SECTION 3: Guests -->
+        <div class="event-section">
+            <h4>3. Guests & Speakers</h4>
+            <div class="form-group">
+                <label for="guest_status">Will there be any official guests?</label>
+                <select name="guest_status" id="guest_status" onchange="toggleGuests(this.value)" required>
+                    <option value="">Select an option</option>
+                    <option value="yes">Yes, guests are invited</option>
+                    <option value="no">No guests</option>
+                </select>
+            </div>
+            
+            <div id="guestCountBox" class="form-group" style="display:none;">
+                <label for="guest_count">How many guests?</label>
+                <input type="number" name="guest_count" id="guest_count" min="1" onchange="generateGuests()" style="max-width: 200px;">
+                <small style="display: block; color: var(--text-muted); margin-top: 5px;">Press Enter or click away to load guest forms.</small>
+            </div>
+            
+            <div id="guestFields"></div>
+        </div>
+        
+        <!-- SECTION 4: Attachments -->
+        <div class="event-section">
+            <h4>4. Attachments</h4>
+            <div class="form-group">
+                <label for="poster">Event Poster / Banner (Optional)</label>
+                <input type="file" name="poster" id="poster" style="background: #fff;">
+            </div>
+        </div>
+        
+        <div style="text-align: right; margin-top: 30px;">
+            <button type="submit" name="submit" class="btn" style="font-size: 16px; padding: 12px 30px;">Submit Event Request</button>
+        </div>
+    </form>
+</div>
+
+<script>
+function toggleVenue(val){
+    document.getElementById("venueBox").style.display = val=="yes"?"block":"none";
+    document.getElementById("participantsBox").style.display = val=="no"?"block":"none";
+    
+    if(val == "yes") {
+        document.getElementById("venue").setAttribute("required", "required");
+        document.getElementById("participants").removeAttribute("required");
+    } else if (val == "no") {
+        document.getElementById("participants").setAttribute("required", "required");
+        document.getElementById("venue").removeAttribute("required");
+    } else {
+        document.getElementById("venue").removeAttribute("required");
+        document.getElementById("participants").removeAttribute("required");
+    }
+}
+
+function toggleGuests(val){
+    document.getElementById("guestCountBox").style.display = val=="yes"?"block":"none";
+    if (val == "yes") {
+        document.getElementById("guest_count").setAttribute("required", "required");
+    } else {
+        document.getElementById("guest_count").removeAttribute("required");
+    }
+    document.getElementById("guestFields").innerHTML="";
+}
+
+function toggleGuestHouse(select, index){
+    let houseBox = document.getElementById("guestHouseBox_" + index);
+    let houseSelect = document.getElementById("guest_house_" + index);
+    if(select.value == "external"){
+        houseBox.style.display = "block";
+        houseSelect.setAttribute("required", "required");
+    } else {
+        houseBox.style.display = "none";
+        houseSelect.removeAttribute("required");
+    }
+}
+
+function generateGuests(){
+    let count = parseInt(document.getElementById("guest_count").value) || 0;
+    let c = document.getElementById("guestFields");
+    c.innerHTML="";
+
+    for(let i=1; i<=count; i++){
+        c.innerHTML += `
+        <div class="card" id="guest-section-${i}" data-testid="guest-section-${i}" style="margin-top:20px; background: #fff; box-shadow: none;">
+            <h4 style="margin-top: 0; padding-bottom: 10px; border-bottom: 1px solid #eee;">Guest ${i} Details</h4>
+
+            <div class="flex-row" style="gap: 20px; margin-bottom: 15px;">
+                <div class="form-group" style="flex: 1;">
+                    <label for="guest_type_${i}">Guest Type</label>
+                    <select name="guest_type_${i}" id="guest-type-${i}" onchange="toggleGuestHouse(this, ${i})" required>
+                        <option value="">Select type</option>
+                        <option value="internal">Internal</option>
+                        <option value="external">External</option>
+                    </select>
+                </div>
+                <div class="form-group" style="flex: 2;">
+                    <label for="guest_name_${i}">Full Name</label>
+                    <input type="text" name="guest_name_${i}" id="guest-name-${i}" required>
+                </div>
+            </div>
+
+            <div class="flex-row" style="gap: 20px; margin-bottom: 15px;">
+                <div class="form-group" style="flex: 1;">
+                    <label for="guest_designation_${i}">Designation (Optional)</label>
+                    <input type="text" name="guest_designation_${i}" id="guest-designation-${i}">
+                </div>
+                <div class="form-group" style="flex: 1;">
+                    <label for="guest_phone_${i}">Phone Number</label>
+                    <input type="text" name="guest_phone_${i}" id="guest-phone-${i}" pattern="[6-9]{1}[0-9]{9}" placeholder="10-digit number" required>
+                </div>
+            </div>
+
+            <div id="guestHouseBox_${i}" class="form-group" style="display:none; background: #fdfefe; padding: 15px; border-left: 3px solid var(--secondary-color);">
+                <label for="guest_house_${i}">Is Guest House Accommodation Required?</label>
+                <select name="guest_house_${i}" id="guest_house_${i}" style="max-width: 200px;">
+                    <option value="">Select</option>
+                    <option value="yes">Yes</option>
+                    <option value="no">No</option>
+                </select>
+            </div>
+
+            <div class="flex-row" style="gap: 20px;">
+                <div class="form-group" style="flex: 1;">
+                    <label for="guest_photo_${i}">Guest Photo (Optional)</label>
+                    <input type="file" name="guest_photo_${i}" id="guest-photo-${i}" style="background: #fdfefe;">
+                </div>
+                <div class="form-group" style="flex: 1;">
+                    <label for="guest_resume_${i}">Guest Resume (Optional)</label>
+                    <input type="file" name="guest_resume_${i}" id="guest-resume-${i}" style="background: #fdfefe;">
+                </div>
+            </div>
+        </div>`;
+    }
+}
+</script>
+{% endblock %}

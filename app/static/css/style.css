@@ -1,0 +1,262 @@
+/* ================== GLOBAL ================== */
+:root {
+    --primary-color: #0891b2; /* Cyan/Teal Primary Accent */
+    --primary-hover: #0e7490;
+    --secondary-color: #f59e0b; /* Amber */
+    --header-bg: #0f172a; /* Deep charcoal/navy for navigation */
+    --bg-color: #f8fafc; /* Light neutral */
+    --card-bg: #ffffff;
+    --text-main: #334155;
+    --text-muted: #64748b;
+    --border-color: #e2e8f0;
+    --success: #10b981; /* Emerald Green */
+    --warning: #f59e0b; /* Amber */
+    --danger: #ef4444; /* Red */
+    --border-radius: 10px;
+    --shadow-sm: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+    --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+    --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-main);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+}
+
+/* ================== TOP BAR ================== */
+.topbar {
+    background-color: var(--header-bg);
+    color: #f8fafc;
+    padding: 16px 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: var(--shadow-md);
+    border-bottom: 2px solid var(--primary-color);
+}
+
+.topbar .title {
+    font-size: 22px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+}
+
+.topbar .actions a {
+    color: #ecf0f1;
+    text-decoration: none;
+    margin-left: 20px;
+    font-weight: 500;
+    font-size: 15px;
+    transition: color 0.2s;
+}
+
+.topbar .actions a:hover {
+    color: #fff;
+}
+
+/* ================== LAYOUT & CARDS ================== */
+.page {
+    padding: 30px 20px;
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.card {
+    background-color: var(--card-bg);
+    padding: 25px 30px;
+    border-radius: var(--border-radius);
+    border: 1px solid var(--border-color);
+    box-shadow: var(--shadow-sm);
+    margin-bottom: 25px;
+}
+
+.card h2, .card h3 {
+    margin-top: 0;
+    color: var(--primary-color);
+    border-bottom: 2px solid var(--bg-color);
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+}
+
+/* ================== FORMS ================== */
+.form-group {
+    margin-bottom: 15px;
+}
+
+label {
+    display: block;
+    margin-bottom: 6px;
+    font-weight: 600;
+    font-size: 14px;
+    color: #34495e;
+}
+
+input[type="text"], input[type="email"], input[type="password"], 
+input[type="number"], input[type="date"], input[type="time"], 
+select, textarea, input[type="file"] {
+    width: 100%;
+    padding: 10px 12px;
+    border-radius: 4px;
+    border: 1px solid #bdc3c7;
+    font-size: 14px;
+    font-family: inherit;
+    transition: border-color 0.2s;
+}
+
+input:focus, select:focus, textarea:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 2px rgba(26, 82, 118, 0.2);
+}
+
+/* ================== BUTTONS ================== */
+button, .btn {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    text-decoration: none;
+    cursor: pointer;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 600;
+    transition: all 0.2s ease-in-out;
+    box-shadow: var(--shadow-sm);
+}
+
+button:hover, .btn:hover {
+    background-color: var(--primary-hover);
+    box-shadow: var(--shadow-md);
+    transform: translateY(-1px);
+}
+
+button:active, .btn:active {
+    transform: translateY(0);
+    box-shadow: var(--shadow-sm);
+}
+
+.btn-secondary {
+    background-color: #64748b;
+}
+
+.btn-secondary:hover {
+    background-color: #475569;
+}
+
+/* ================== TABLES ================== */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+th, td {
+    padding: 14px 15px;
+    text-align: left;
+    border-bottom: 1px solid var(--border-color);
+}
+
+th {
+    background-color: var(--bg-color);
+    color: var(--text-muted);
+    font-weight: 600;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+tr:hover td {
+    background-color: #f1f5f9;
+}
+
+/* ================== ALERTS & BADGES ================== */
+.flash {
+    padding: 12px 15px;
+    background-color: #fee2e2;
+    color: #991b1b;
+    border-left: 4px solid var(--danger);
+    margin-bottom: 20px;
+    border-radius: var(--border-radius);
+    font-size: 14px;
+    font-weight: 500;
+    box-shadow: var(--shadow-sm);
+}
+
+.badge {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.badge-pending { background-color: #fef3c7; color: #b45309; }
+.badge-approved { background-color: #d1fae5; color: #047857; }
+.badge-rejected { background-color: #fee2e2; color: #b91c1c; }
+
+/* ================== DASHBOARD STATS ================== */
+.stats-container {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 25px;
+}
+
+.stat-card {
+    flex: 1;
+    background: #fff;
+    padding: 20px;
+    border-radius: var(--border-radius);
+    border: 1px solid var(--border-color);
+    box-shadow: var(--shadow-sm);
+    text-align: center;
+}
+
+.stat-card h3 {
+    margin: 0;
+    font-size: 14px;
+    color: var(--text-muted);
+    border: none;
+    padding: 0;
+}
+
+.stat-card p {
+    margin: 10px 0 0 0;
+    font-size: 32px;
+    font-weight: bold;
+    color: var(--primary-color);
+}
+
+/* ================== UTILITIES ================== */
+.auth-box {
+    max-width: 450px;
+    margin: 60px auto;
+}
+
+.mt-2 { margin-top: 15px; }
+.mb-2 { margin-bottom: 15px; }
+.flex-row { display: flex; gap: 15px; align-items: center; }
+
+.event-section {
+    background: #fbfcfc;
+    padding: 15px 20px;
+    border-radius: 6px;
+    border: 1px solid #ebedef;
+    margin-bottom: 20px;
+}
+
+.event-section h4 {
+    margin-top: 0;
+    color: #34495e;
+}
