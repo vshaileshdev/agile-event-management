@@ -32,6 +32,11 @@ def create_app(test_config=None):
 
     init_app(app)
 
+    # Register S3/file URL helper for Jinja templates
+    from app.s3 import get_file_url
+    app.jinja_env.globals['file_url'] = get_file_url
+    app.jinja_env.filters['file_url'] = get_file_url
+
     # Register blueprints
     from app.blueprints import auth, faculty, admin
     app.register_blueprint(auth.bp)

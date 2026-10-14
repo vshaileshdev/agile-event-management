@@ -4,6 +4,7 @@ from flask import Blueprint, current_app, g, redirect, render_template, request,
 from werkzeug.utils import secure_filename
 from app.db import get_db
 from app.blueprints.auth import login_required_faculty
+from app.s3 import upload_file, generate_safe_filename, delete_s3_objects
 import re
 
 bp = Blueprint('faculty', __name__, url_prefix='/faculty')
@@ -39,11 +40,17 @@ def raise_event():
         elif venue_status == 'no' and not participants:
             error = 'Participants count is required when you need a venue.'
         
+        uploaded_refs = []
         poster_filename = None
         if 'poster' in request.files and request.files['poster'].filename != '':
             file = request.files['poster']
-            poster_filename = f"{int(time.time())}_{secure_filename(file.filename)}"
-            file.save(os.path.join(current_app.config['UPLOAD_FOLDER'], poster_filename))
+            safe_poster = generate_safe_filename(file.filename, prefix='poster')
+            try:
+                poster_filename = upload_file(file, safe_poster)
+                uploaded_refs.append(poster_filename)
+            except Exception as e:
+                current_app.logger.error(f"Failed to upload poster: {e}")
+                error = 'Failed to upload event poster. Please try again.'
         
         if error is None:
             cursor = db.cursor()
@@ -77,14 +84,26 @@ def raise_event():
                     photo_file = request.files.get(f'guest_photo_{i}')
                     photo_filename = None
                     if photo_file and photo_file.filename != '':
-                        photo_filename = f"{int(time.time())}_photo_{i}_{secure_filename(photo_file.filename)}"
-                        photo_file.save(os.path.join(current_app.config['UPLOAD_FOLDER'], photo_filename))
+                        safe_photo = generate_safe_filename(photo_file.filename, prefix=f'photo_{i}')
+                        try:
+                            photo_filename = upload_file(photo_file, safe_photo)
+                            uploaded_refs.append(photo_filename)
+                        except Exception as e:
+                            current_app.logger.error(f"Failed to upload guest photo {i}: {e}")
+                            error = f'Failed to upload photo for guest {i}.'
+                            break
                         
                     resume_file = request.files.get(f'guest_resume_{i}')
                     resume_filename = None
                     if resume_file and resume_file.filename != '':
-                        resume_filename = f"{int(time.time())}_resume_{i}_{secure_filename(resume_file.filename)}"
-                        resume_file.save(os.path.join(current_app.config['UPLOAD_FOLDER'], resume_filename))
+                        safe_resume = generate_safe_filename(resume_file.filename, prefix=f'resume_{i}')
+                        try:
+                            resume_filename = upload_file(resume_file, safe_resume)
+                            uploaded_refs.append(resume_filename)
+                        except Exception as e:
+                            current_app.logger.error(f"Failed to upload guest resume {i}: {e}")
+                            error = f'Failed to upload resume for guest {i}.'
+                            break
                     
                     cursor.execute(
                         '''INSERT INTO event_guests 
@@ -98,6 +117,10 @@ def raise_event():
                 return redirect(url_for('faculty.dashboard'))
             else:
                 db.rollback()
+                delete_s3_objects(uploaded_refs)
+        else:
+            db.rollback()
+            delete_s3_objects(uploaded_refs)
         
         if error:
             flash(error)

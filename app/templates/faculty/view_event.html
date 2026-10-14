@@ -26,7 +26,7 @@
     {% if event.poster %}
         <div style="margin: 20px 0;">
             <p><b>Poster:</b></p>
-            <img src="{{ url_for('static', filename='uploads/' ~ event.poster) }}" width="200" alt="Event Poster" style="border-radius: 4px; box-shadow: var(--shadow-sm);">
+            <img src="{{ file_url(event.poster) }}" width="200" alt="Event Poster" style="border-radius: 4px; box-shadow: var(--shadow-sm);">
         </div>
     {% endif %}
     
@@ -50,12 +50,12 @@
                 {% if g.guest_photo %}
                     <div style="margin-top: 10px;">
                         <p style="margin: 0 0 5px 0;"><b>Photo:</b></p>
-                        <img src="{{ url_for('static', filename='uploads/' ~ g.guest_photo) }}" width="100" alt="Guest Photo" style="border-radius: 4px;">
+                        <img src="{{ file_url(g.guest_photo) }}" width="100" alt="Guest Photo" style="border-radius: 4px;">
                     </div>
                 {% endif %}
                 
                 {% if g.guest_resume %}
-                    <p style="margin-top: 10px;"><b>Resume:</b> <a href="{{ url_for('static', filename='uploads/' ~ g.guest_resume) }}" target="_blank" style="color: var(--primary-color);">View Resume</a></p>
+                    <p style="margin-top: 10px;"><b>Resume:</b> <a href="{{ file_url(g.guest_resume) }}" target="_blank" style="color: var(--primary-color);">View Resume</a></p>
                 {% endif %}
             </div>
         {% endfor %}

@@ -3,3 +3,5 @@ DB_PORT=3306
 DB_NAME=event_management
 DB_USER=admin
 DB_PASSWORD=YOUR_PLACEHOLDER_PASSWORD
+S3_BUCKET=event-management-system-shailesh-2026-036019072884-us-east-1-an
+AWS_REGION=us-east-1
