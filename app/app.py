@@ -1,11 +1,29 @@
 import os
+import logging
 from flask import Flask, redirect, url_for
 from app.db import init_app
 
+logger = logging.getLogger(__name__)
+
 def create_app(test_config=None):
     app = Flask('app', instance_relative_config=True)
+
+    secret_key = os.environ.get('SECRET_KEY')
+    is_production = bool(
+        os.environ.get('DB_SECRET_NAME')
+        or os.environ.get('DB_HOST')
+        or os.environ.get('FLASK_ENV') == 'production'
+    )
+    if not secret_key:
+        if is_production:
+            logger.warning(
+                "SECURITY WARNING: SECRET_KEY environment variable is not set in production. "
+                "Using fallback development key. Set a persistent SECRET_KEY to secure sessions."
+            )
+        secret_key = 'dev-secret-key'
+
     app.config.from_mapping(
-        SECRET_KEY='dev-secret-key',
+        SECRET_KEY=secret_key,
         DATABASE=os.path.join(app.instance_path, 'event_management.db'),
         UPLOAD_FOLDER=os.path.join(app.root_path, 'static', 'uploads'),
     )

@@ -3,19 +3,20 @@ import pymysql
 import sqlite3
 from werkzeug.security import generate_password_hash
 from app.app import create_app
+from app.secrets import get_db_config
 
 def init_db():
     app = create_app()
     with app.app_context():
-        db_host = os.environ.get('DB_HOST')
+        db_config = get_db_config()
         
-        if db_host:
+        if db_config:
             conn = pymysql.connect(
-                host=db_host,
-                port=int(os.environ.get('DB_PORT', 3306)),
-                user=os.environ.get('DB_USER'),
-                password=os.environ.get('DB_PASSWORD'),
-                database=os.environ.get('DB_NAME')
+                host=db_config['host'],
+                port=db_config['port'],
+                user=db_config['user'],
+                password=db_config['password'],
+                database=db_config['database']
             )
             cursor = conn.cursor()
             autoincrement_syntax = "AUTO_INCREMENT"
@@ -106,7 +107,7 @@ def init_db():
 
         # Seed Admin User
         admin_password = generate_password_hash("admin123")
-        placeholder = "%s" if db_host else "?"
+        placeholder = "%s" if db_config else "?"
         cursor.execute(f"INSERT INTO users (name, email, password, role) VALUES ({placeholder}, {placeholder}, {placeholder}, {placeholder})", 
                        ("Admin User", "admin@vit.edu", admin_password, "admin"))
 

@@ -3,6 +3,7 @@ import sqlite3
 from flask import g, current_app
 import pymysql
 import pymysql.cursors
+from app.secrets import get_db_config
 
 class SQLiteWrapper:
     def __init__(self, conn):
@@ -49,15 +50,15 @@ class SQLiteCursorWrapper:
 def get_db():
     db = getattr(g, '_database', None)
     if db is None:
-        db_host = os.environ.get('DB_HOST')
-        if db_host:
+        db_config = get_db_config()
+        if db_config:
             # Connect to MySQL/RDS
             conn = pymysql.connect(
-                host=db_host,
-                port=int(os.environ.get('DB_PORT', 3306)),
-                user=os.environ.get('DB_USER'),
-                password=os.environ.get('DB_PASSWORD'),
-                database=os.environ.get('DB_NAME'),
+                host=db_config['host'],
+                port=db_config['port'],
+                user=db_config['user'],
+                password=db_config['password'],
+                database=db_config['database'],
                 cursorclass=pymysql.cursors.DictCursor,
                 autocommit=False
             )

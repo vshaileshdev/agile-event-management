@@ -1,7 +1,39 @@
+# ==============================================================================
+# AWS-Based Event Management System - Environment Configuration Template
+# ==============================================================================
+
+# ------------------------------------------------------------------------------
+# 1. AWS Secrets Manager Configuration (Recommended for Production)
+# ------------------------------------------------------------------------------
+# When DB_SECRET_NAME is set, database credentials are automatically fetched
+# from AWS Secrets Manager using the EC2 instance profile IAM role.
+# Expected JSON structure in secret:
+#   {"host": "...", "port": 3306, "username": "...", "password": "...", "dbname": "..."}
+# DB_SECRET_NAME takes precedence over DB_HOST/DB_PASSWORD environment variables.
+DB_SECRET_NAME=event-management-db-credentials
+
+# ------------------------------------------------------------------------------
+# 2. Database Environment Variables (Fallback / Direct RDS Configuration)
+# ------------------------------------------------------------------------------
+# Used ONLY if DB_SECRET_NAME is unset. If both DB_SECRET_NAME and DB_HOST are unset,
+# the application defaults to local SQLite for local development.
 DB_HOST=event-management-db.cgvcuoacqti3.us-east-1.rds.amazonaws.com
 DB_PORT=3306
 DB_NAME=event_management
 DB_USER=admin
 DB_PASSWORD=YOUR_PLACEHOLDER_PASSWORD
+
+# ------------------------------------------------------------------------------
+# 3. Flask Security Configuration
+# ------------------------------------------------------------------------------
+# Secret key used for signing session cookies. Must be persistent across Gunicorn workers.
+# In production, set to a cryptographically secure random string (e.g., openssl rand -hex 32).
+SECRET_KEY=YOUR_SECURE_RANDOM_SECRET_KEY
+
+# ------------------------------------------------------------------------------
+# 4. Amazon S3 Object Storage Configuration (Private Bucket)
+# ------------------------------------------------------------------------------
+# S3 bucket for private storage of event posters, guest photos, and resumes.
+# Uses EC2 instance profile IAM role for authentication; retrieves via presigned URLs.
 S3_BUCKET=event-management-system-shailesh-2026-036019072884-us-east-1-an
 AWS_REGION=us-east-1
